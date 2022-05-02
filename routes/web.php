@@ -62,7 +62,7 @@ Route::get('arreglos',function (){
     "ciudades" => [
         "arequipa",
         "cusco",
-        "trujillo"
+       
          ]
    ],
   "paraguay"=>[
