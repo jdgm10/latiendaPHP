@@ -96,9 +96,9 @@ return view('paises')
 return view('layouts.menu');
  });
 
- Route::get('prueba2' , function(){
-    return view('productos.new');
-     });
+//  Route::get('prueba2' , function(){
+//     return view('productos.new');
+//      });
 
      //Rutas GET
 
