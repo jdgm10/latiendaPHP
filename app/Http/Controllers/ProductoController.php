@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Marca;
 use App\Models\Categoria;
 use App\Models\Producto;
+//dependecia par aaa validador
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 
@@ -50,7 +52,38 @@ class ProductoController extends Controller
         // var_dump($request->all());
         // echo "</pre>";
 
-        $archivo = $request->imagen;
+        //Validacion de datos del formulario
+        //1 Establecer de validacion para aplicar para las input apa
+        $reglas =[
+          "nombre" => 'required|alpha|unique:productos,nombre',
+          "desc" => 'required|min:10|max:20',
+          "precio" => 'required|numeric',
+          "imagen" =>  'required|image',
+          "categoria" => 'required',
+          "marca" => 'required'
+        ];
+
+
+        $mensajes=[
+               "required" => "Campo que sea obligatorio",
+               "alpha"  => "Solo letras pa",
+               "numeric" => "solo numeros pa",
+            "image" => "debe ser un archivo imagen pa",
+            "min" => "minimo 10 caracteres",
+            "max" => "Maximo 20 caracteres"
+        ];
+        //2
+        $v = Validator::make($request->all(), $reglas, $mensajes );
+        //3
+        //fails si la vaidacion retorna
+        //true: si la validacion falla
+        //false: si los datos son validos
+      if($v->fails()){
+        return redirect('productos/create')
+        ->withErrors($v);
+          }else{
+            //validacion correcta
+             $archivo = $request->imagen;
 
         $nombre_archivo = $archivo->getClientOriginalname();
         var_dump($nombre_archivo);
@@ -65,7 +98,14 @@ class ProductoController extends Controller
         $producto-> marca_id = $request->marca;
         $producto-> categoria_id = $request->categoria;
         $producto->save();
-        echo "producto registrando";
+        
+        return redirect('productos/create')
+        ->with("mensaje" , "producto registrado");
+          }
+
+        die(var_dump ($v->fails()));
+
+     
 
     }
 
